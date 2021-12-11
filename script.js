@@ -74,7 +74,7 @@ function startmenu(W,H) {
     ctx.fillText('Press Enter to Start', wi2*5.3, hi2*22);
 
 
-    window.addEventListener("keydown", function begin(event) {
+    window.addEventListener("keydown", function(event) {
 		if(event.key == 'Enter' && STATE == "menu") {
             STATE = "run";
             mainloop(W,H);
@@ -106,39 +106,30 @@ function mainloop(W,H) {
 		}
 		ctx.font = '1vw serif';
 		ctx.fillStyle = 'black';
-		ctx.fillText('Press Escape to Pause', W * 0.1, H*0.1,W* 0.2,H*0.2);
-		var pause = false;
-		window.addEventListener("keydown", function ending(event) {
+		ctx.fillText('Press Escape to Quit, No Backsies!', W * 0.1, H*0.1,W* 0.2,H*0.2);
+		window.addEventListener("keydown", function(event) {
 			if(event.key == 'Escape') {
-				if(pause == false){
-					var storedtime = timer;
-					var storedprob = prob;
-					ctx.fillStyle = 'rgba(0,0,0,0.4)';
-					ctx.fillRect(0,0,W,H);
-					ctx.fillText('PAUSED', W/2,H/2,W * 0.7,H * 0.7);
-					ctx.fillText('Press ESC again to quit, SPACEBAR to resume', W/2,H/2,W * 0.7,H * 0.7);
-					this.setTimeout(() => { pause = true; }, 2000 );
-				}
-				if(pause == true){
-					this.alert("Thanks for playing!");
-					STATE = 'menu';
-					DIFF = 0;
-					ctx.clearRect(0,0, W, H);
-					bg();
-					window.removeEventListener("keydown", begin());
-					window.removeEventListener("keydown", ending());
-					window.removeEventListener("resize", bg());
-					window.removeEventListener("keydown", diff());
-				}
-			}
-			if(event.key == 'Space' && pause == true){
-				pause == false;
+				this.alert("Thanks for playing!");
 				ctx.clearRect(0,0, W, H);
 				bg();
-				styleprob(storedprob, storedtime);
 			}
 		}, true );
 	}
+}
+
+function getNumbers(DIFF) {
+	if(DIFF == 1){
+		var min = 1;
+		var max = 8;
+	} else if(DIFF == 2){
+		var min = 8;
+		var max = 32;
+	} else if(DIFF == 3){
+		var min = 16;
+		var max = 128;
+	}
+	
+	return Math.random() * (max - min) + min;
 }
 
 function diffselect(W,H) {
@@ -147,7 +138,7 @@ function diffselect(W,H) {
 	ctx.fillText('Select Difficulty', W * 0.2, H* 0.4);
 	ctx.drawImage(d, W * -0.1, H * 0.01, W * 1.5, H * 1.5);
 	DIFF = 0;
-	window.addEventListener("keydown", function diff(event){
+	window.addEventListener("keydown", function(event){
 		if(event.key == 'ArrowRight') {
 			if(DIFF < 3) {
 				DIFF = DIFF + 1
@@ -176,7 +167,6 @@ function diffselect(W,H) {
 			ctx.drawImage(dth, W * -0.1, H * 0.01, W * 1.5, H * 1.5);
 		}
 		if(event.key == 'Enter') {
-			window.removeEventListener("keydown", diff());
 			mainloop(W,H);
 		}
 	}, true);
